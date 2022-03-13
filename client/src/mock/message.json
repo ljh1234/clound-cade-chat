@@ -1,0 +1,46 @@
+{
+  "code": 0,
+  "msg": "",
+  "data": [
+    {
+      "userId": "1",
+      "aimId": "2",
+      "nickName": "张三",
+      "message": {
+        "type": "text",
+        "value": "jljkljkljkljkljklj"
+      },
+      "time": ""
+    },
+    {
+      "userId": "1",
+      "aimId": "2",
+      "nickName": "张三",
+      "message": {
+        "type": "text",
+        "value": "jljkljkljkljkljklj"
+      },
+      "time": ""
+    },
+    {
+      "userId": "1",
+      "aimId": "2",
+      "nickName": "张三",
+      "message": {
+        "type": "text",
+        "value": "jljkljkljkljkljklj"
+      },
+      "time": ""
+    },
+    {
+      "userId": "1",
+      "aimId": "2",
+      "nickName": "张三",
+      "message": {
+        "type": "text",
+        "value": "jljkljkljkljkljklj"
+      },
+      "time": ""
+    }
+  ]
+}
