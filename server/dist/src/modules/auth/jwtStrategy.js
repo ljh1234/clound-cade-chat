@@ -19,7 +19,7 @@ exports.jwtConstants = {
 let JwtStrategy = class JwtStrategy extends (0, passport_1.PassportStrategy)(passport_jwt_1.Strategy) {
     constructor() {
         super({
-            jwtFromRequest: passport_jwt_1.ExtractJwt.fromAuthHeaderAsBearerToken(),
+            jwtFromRequest: passport_jwt_1.ExtractJwt.fromHeader('Authorization'),
             ignoreExpiration: false,
             secretOrKey: exports.jwtConstants.secret,
         });

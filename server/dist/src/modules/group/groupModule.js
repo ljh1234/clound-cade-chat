@@ -13,12 +13,13 @@ const groupService_1 = require("./groupService");
 const groupController_1 = require("./groupController");
 const group_1 = require("../../entity/group");
 const groupMessage_1 = require("../../entity/groupMessage");
+const userEntity_1 = require("../../entity/userEntity");
 let GroupModule = class GroupModule {
 };
 GroupModule = __decorate([
     (0, common_1.Module)({
         imports: [
-            typeorm_1.TypeOrmModule.forFeature([group_1.Group, groupMessage_1.GroupMessage]),
+            typeorm_1.TypeOrmModule.forFeature([group_1.Group, groupMessage_1.GroupMessage, userEntity_1.User]),
         ],
         providers: [groupService_1.GroupService],
         controllers: [groupController_1.GroupController],

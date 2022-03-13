@@ -23,8 +23,6 @@ export class AuthService {
       const salt = user.salt;
       const hashPassword = encryptPassword(password, salt);
 
-      console.log('user', user);
-      console.log('password', hashedPassword, hashPassword)
       if (hashedPassword === hashPassword) {
         // 密码正确
         return {
@@ -51,7 +49,7 @@ export class AuthService {
     try {
       const token = this.jwtService.sign(payload)
 
-      return resBody('OK', '登录成功', { token, userInfo: { username: user.username, userId: user.userId, nickName: user.nickName, avatar: user.avatar } })
+      return resBody('OK', '登录成功', { token, userInfo: { username: user.username, userId: user.userId, nickName: user.nickName, avatar: user.avatar, groupIds: user.groupIds } })
     } catch (error) {
       return resBody('ERROR', '账号或密码错误', null)
     }

@@ -16,6 +16,7 @@ exports.GroupController = void 0;
 const common_1 = require("@nestjs/common");
 const groupService_1 = require("./groupService");
 const passport_1 = require("@nestjs/passport");
+const swagger_1 = require("@nestjs/swagger");
 let GroupController = class GroupController {
     constructor(groupService) {
         this.groupService = groupService;
@@ -35,6 +36,7 @@ let GroupController = class GroupController {
     }
 };
 __decorate([
+    (0, swagger_1.ApiOperation)({ summary: '获取聊天室' }),
     (0, common_1.Post)('getGroups'),
     __param(0, (0, common_1.Body)('groupIds')),
     __metadata("design:type", Function),
@@ -42,6 +44,7 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], GroupController.prototype, "getGroups", null);
 __decorate([
+    (0, swagger_1.ApiOperation)({ summary: '获取聊天室详情' }),
     (0, common_1.Get)('findByName'),
     __param(0, (0, common_1.Query)('groupName')),
     __metadata("design:type", Function),
@@ -49,6 +52,7 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], GroupController.prototype, "getGroupsByName", null);
 __decorate([
+    (0, swagger_1.ApiOperation)({ summary: '获取聊天室成员' }),
     (0, common_1.Get)('getGroupUsers'),
     __param(0, (0, common_1.Query)('grouId')),
     __metadata("design:type", Function),
@@ -56,6 +60,7 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], GroupController.prototype, "getGroupUsers", null);
 __decorate([
+    (0, swagger_1.ApiOperation)({ summary: '获取聊天消息' }),
     (0, common_1.Post)('groupMessages'),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -63,6 +68,7 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], GroupController.prototype, "getGroupMessages", null);
 GroupController = __decorate([
+    (0, swagger_1.ApiTags)('聊天室'),
     (0, common_1.Controller)('group'),
     (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt')),
     __metadata("design:paramtypes", [groupService_1.GroupService])

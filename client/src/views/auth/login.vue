@@ -71,9 +71,9 @@ export default {
             message.success({ content: '登录成功' })
             this.$store.commit('user/SET_TOKEN', res.token)
             this.$store.commit('user/SET_USER', res.userInfo)
+            console.log('user', res)
             window.location.hash = '/'
           }
-          console.log('res', res)
         }
       })
     }

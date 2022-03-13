@@ -5,6 +5,7 @@ const getDefaultUserState = () => {
     userInfo: {
       nickName: '',
       userId: '',
+      groupIds: '',
       avatarUrl: '',
     },
     token: getLocalStorage('token')

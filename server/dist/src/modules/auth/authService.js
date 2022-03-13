@@ -31,8 +31,6 @@ let AuthService = class AuthService {
             const hashedPassword = user.password;
             const salt = user.salt;
             const hashPassword = (0, index_1.encryptPassword)(password, salt);
-            console.log('user', user);
-            console.log('password', hashedPassword, hashPassword);
             if (hashedPassword === hashPassword) {
                 return {
                     code: 1,
@@ -55,7 +53,7 @@ let AuthService = class AuthService {
         const payload = { username: user.username, sub: user.userId, nickName: user.nickName };
         try {
             const token = this.jwtService.sign(payload);
-            return (0, index_2.resBody)('OK', '登录成功', { token, userInfo: { username: user.username, userId: user.userId, nickName: user.nickName, avatar: user.avatar } });
+            return (0, index_2.resBody)('OK', '登录成功', { token, userInfo: { username: user.username, userId: user.userId, nickName: user.nickName, avatar: user.avatar, groupIds: user.groupIds } });
         }
         catch (error) {
             return (0, index_2.resBody)('ERROR', '账号或密码错误', null);
