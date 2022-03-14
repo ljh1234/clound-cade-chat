@@ -20,11 +20,10 @@ let LocalStrategy = class LocalStrategy extends (0, passport_1.PassportStrategy)
         this.authService = authService;
     }
     async validate(username, password) {
-        const user = await this.authService.validateUser(username, password);
-        if (!user) {
-            throw new common_1.UnauthorizedException();
+        if (!username || !password) {
+            return false;
         }
-        return user;
+        return { username, password };
     }
 };
 LocalStrategy = __decorate([

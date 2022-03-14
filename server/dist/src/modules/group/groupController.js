@@ -15,7 +15,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.GroupController = void 0;
 const common_1 = require("@nestjs/common");
 const groupService_1 = require("./groupService");
-const passport_1 = require("@nestjs/passport");
 const swagger_1 = require("@nestjs/swagger");
 let GroupController = class GroupController {
     constructor(groupService) {
@@ -70,7 +69,6 @@ __decorate([
 GroupController = __decorate([
     (0, swagger_1.ApiTags)('聊天室'),
     (0, common_1.Controller)('group'),
-    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt')),
     __metadata("design:paramtypes", [groupService_1.GroupService])
 ], GroupController);
 exports.GroupController = GroupController;

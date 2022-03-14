@@ -6,7 +6,6 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('聊天室')
 @Controller('group')
-@UseGuards(AuthGuard('jwt'))
 export class GroupController {
   constructor(private readonly groupService: GroupService) {}
 

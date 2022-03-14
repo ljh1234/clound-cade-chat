@@ -21,11 +21,11 @@ AuthModule = __decorate([
     (0, common_1.Module)({
         imports: [
             typeorm_1.TypeOrmModule.forFeature([userEntity_1.User]),
-            passport_1.PassportModule.register({ defaultStrategy: 'jwt' }),
             jwt_1.JwtModule.register({
                 secret: jwtStrategy_1.jwtConstants.secret,
-                signOptions: { expiresIn: '8h' },
+                signOptions: { expiresIn: '3d' },
             }),
+            passport_1.PassportModule,
         ],
         providers: [authService_1.AuthService, localStrategy_1.LocalStrategy, jwtStrategy_1.JwtStrategy],
         exports: [authService_1.AuthService],

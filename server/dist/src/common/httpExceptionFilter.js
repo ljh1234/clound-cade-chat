@@ -17,6 +17,7 @@ let HttpExceptionFilter = class HttpExceptionFilter {
         const exceptionRes = exception.getResponse();
         const error = exceptionRes.error;
         let message = exceptionRes.message;
+        console.log('httpException', exception);
         if (status === 401) {
             message = '身份过期，请重新登录';
         }

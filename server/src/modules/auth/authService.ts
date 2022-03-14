@@ -17,7 +17,7 @@ export class AuthService {
 
   // 校验用户信息
   async validateUser(username: string, password: string) {
-    const user = await this.userRepository.findOne({ where: { username } })
+    const user = await this.userRepository.findOne({ where: { username: username }})
     if (user) {
       const hashedPassword = user.password;
       const salt = user.salt;
@@ -45,7 +45,7 @@ export class AuthService {
   }
 
   async certificate(user: any) {
-    const payload = { username: user.username, sub: user.userId, nickName: user.nickName }
+    const payload = { username: user.username, password: user.password}
     try {
       const token = this.jwtService.sign(payload)
 

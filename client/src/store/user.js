@@ -2,7 +2,7 @@ import { getLocalStorage, setLocalStorage } from '@/utils/index'
 
 const getDefaultUserState = () => {
   return {
-    userInfo: {
+    userInfo: getLocalStorage('userInfo') ? JSON.parse(getLocalStorage('userInfo')) || {
       nickName: '',
       userId: '',
       groupIds: '',
@@ -22,7 +22,7 @@ const mutations = {
     }
 
     state.userInfo = newUserInfo
-    setLocalStorage('userInfo', newUserInfo)
+    setLocalStorage('userInfo', JSON.stringify(newUserInfo))
   },
   SET_TOKEN: (state, token) => {
     if (token) {

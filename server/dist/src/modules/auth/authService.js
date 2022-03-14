@@ -26,7 +26,7 @@ let AuthService = class AuthService {
         this.jwtService = jwtService;
     }
     async validateUser(username, password) {
-        const user = await this.userRepository.findOne({ where: { username } });
+        const user = await this.userRepository.findOne({ where: { username: username } });
         if (user) {
             const hashedPassword = user.password;
             const salt = user.salt;
@@ -50,7 +50,7 @@ let AuthService = class AuthService {
         };
     }
     async certificate(user) {
-        const payload = { username: user.username, sub: user.userId, nickName: user.nickName };
+        const payload = { username: user.username, password: user.password };
         try {
             const token = this.jwtService.sign(payload);
             return (0, index_2.resBody)('OK', '登录成功', { token, userInfo: { username: user.username, userId: user.userId, nickName: user.nickName, avatar: user.avatar, groupIds: user.groupIds } });
