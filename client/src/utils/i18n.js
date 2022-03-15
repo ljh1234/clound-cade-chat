@@ -7,7 +7,12 @@ const message = {
       passwordLabel: '密码',
       passwordPlaceholder: '请输入密码',
       confirmButtonText: '登录'
+    },
+    groupSelect: {
+      searchGroupPlaceholder: '请输入聊天组名查询',
+      joinButtonText: '加入'
     }
+    
   },
   EN: {
     sendButtonText: 'send',
@@ -17,6 +22,10 @@ const message = {
       passwordLabel: 'password',
       passwordPlaceholder: 'please enter your password',
       confirmButtonText: 'login'
+    },
+    groupSelect: {
+      searchGroupPlaceholder: 'please enter groupName to search',
+      joinButtonText: 'join'
     }
   }
 }

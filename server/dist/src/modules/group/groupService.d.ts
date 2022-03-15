@@ -10,6 +10,11 @@ export declare class GroupService {
         msg: string;
         data: any;
     }>;
+    getAllGroups(): Promise<{
+        code: any;
+        msg: string;
+        data: any;
+    }>;
     getGroupUsers(groupId: number): Promise<{
         code: any;
         msg: string;

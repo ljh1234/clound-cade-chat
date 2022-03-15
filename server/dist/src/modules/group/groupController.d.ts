@@ -8,6 +8,11 @@ export declare class GroupController {
         msg: string;
         data: any;
     }>;
+    getAllGroups(): Promise<{
+        code: any;
+        msg: string;
+        data: any;
+    }>;
     getGroupsByName(groupName: string): Promise<{
         code: any;
         msg: string;

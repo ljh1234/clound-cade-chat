@@ -1,11 +1,12 @@
 import { Controller, Post, Get, Body, Query, UseGuards } from '@nestjs/common';
 import { GroupService } from './groupService';
-import { AuthGuard } from '@nestjs/passport';
+// import { AuthGuard } from '@nestjs/passport';
 import { getGroupMessageBody } from 'src/common/requestBody';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('聊天室')
 @Controller('group')
+// @UseGuards(AuthGuard('jwt'))
 export class GroupController {
   constructor(private readonly groupService: GroupService) {}
 
@@ -13,6 +14,12 @@ export class GroupController {
   @Post('getGroups')
   getGroups(@Body('groupIds') groupIds: string) {
     return this.groupService.getGroups(groupIds);
+  }
+
+  @ApiOperation({ summary: '获取所有聊天室'})
+  @Get('getAllGroups')
+  getAllGroups() {
+    return this.groupService.getAllGroups()
   }
 
   @ApiOperation({ summary: '获取聊天室详情' })

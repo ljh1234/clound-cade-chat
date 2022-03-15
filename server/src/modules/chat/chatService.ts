@@ -47,6 +47,8 @@ export class ChatService {
     // if(userRoom) {
     //   client.join(userRoom)
     // }
+    console.log('链接成功')
+    this.server.emit('connection', 'connected')
     return '连接成功'
   }
 
@@ -55,6 +57,10 @@ export class ChatService {
     this.getActiveGroupUser()
   }
 
+  @SubscribeMessage('hello')
+  async hello(@ConnectedSocket() client: Socket, @MessageBody() data: any):Promise<any> {
+    console.log('data', data)
+  }
   // 创建群组
   @SubscribeMessage('addGroup')
   async addGroup(@ConnectedSocket() client: Socket, @MessageBody() data: addGroupBody):Promise<any> {

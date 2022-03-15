@@ -14,6 +14,7 @@ export declare class ChatService {
     defaultGroup: string;
     handleConnection(client: Socket): Promise<string>;
     handleDisconnect(): Promise<any>;
+    hello(client: Socket, data: any): Promise<any>;
     addGroup(client: Socket, data: addGroupBody): Promise<any>;
     joinGroup(client: Socket, data: joinGroupBody): Promise<any>;
     joinGroupSocket(client: Socket, data: GroupMap): Promise<any>;

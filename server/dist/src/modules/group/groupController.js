@@ -23,6 +23,9 @@ let GroupController = class GroupController {
     getGroups(groupIds) {
         return this.groupService.getGroups(groupIds);
     }
+    getAllGroups() {
+        return this.groupService.getAllGroups();
+    }
     getGroupsByName(groupName) {
         return this.groupService.getGroupsByName(groupName);
     }
@@ -42,6 +45,13 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
 ], GroupController.prototype, "getGroups", null);
+__decorate([
+    (0, swagger_1.ApiOperation)({ summary: '获取所有聊天室' }),
+    (0, common_1.Get)('getAllGroups'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], GroupController.prototype, "getAllGroups", null);
 __decorate([
     (0, swagger_1.ApiOperation)({ summary: '获取聊天室详情' }),
     (0, common_1.Get)('findByName'),

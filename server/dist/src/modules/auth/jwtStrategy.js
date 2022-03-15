@@ -32,6 +32,7 @@ let JwtStrategy = class JwtStrategy extends (0, passport_1.PassportStrategy)(pas
         this.userRepository = userRepository;
     }
     async validate(payload) {
+        console.log('payload', payload);
         const user = this.userRepository.findOne({ where: { username: payload.username, password: payload.password } });
         console.log('jwtStrategy', user);
         if (!user) {

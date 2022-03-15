@@ -35,6 +35,17 @@ export class GroupService {
     }
   }
 
+  async getAllGroups() {
+    try {
+      const groups = await this.groupRepository.find()
+
+      return resBody('OK', '获取群组成功', { groups })
+    } catch (error) {
+      // 
+      return resBody('ERROR', '获取群组失败', null)
+    }
+  }
+
   async getGroupUsers(groupId: number) {
     try {
       if (!groupId) {

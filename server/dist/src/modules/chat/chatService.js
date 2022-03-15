@@ -31,10 +31,15 @@ let ChatService = class ChatService {
         this.groupMessageRepository = groupMessageRepository;
     }
     async handleConnection(client) {
+        console.log('链接成功');
+        this.server.emit('connection', 'connected');
         return '连接成功';
     }
     async handleDisconnect() {
         this.getActiveGroupUser();
+    }
+    async hello(client, data) {
+        console.log('data', data);
     }
     async addGroup(client, data) {
         const isUser = await this.userRepository.findOne({ userId: data.creatorId });
@@ -142,6 +147,14 @@ __decorate([
     (0, websockets_1.WebSocketServer)(),
     __metadata("design:type", socket_io_1.Server)
 ], ChatService.prototype, "server", void 0);
+__decorate([
+    (0, websockets_1.SubscribeMessage)('hello'),
+    __param(0, (0, websockets_1.ConnectedSocket)()),
+    __param(1, (0, websockets_1.MessageBody)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [socket_io_1.Socket, Object]),
+    __metadata("design:returntype", Promise)
+], ChatService.prototype, "hello", null);
 __decorate([
     (0, websockets_1.SubscribeMessage)('addGroup'),
     __param(0, (0, websockets_1.ConnectedSocket)()),

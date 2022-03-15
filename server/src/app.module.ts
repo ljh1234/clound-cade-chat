@@ -31,7 +31,7 @@ import { GroupModule } from './modules/group/groupModule';
     UserModule,
     FriendModule,
     ChatModule,
-    // AuthModule,
+    AuthModule,
     GroupModule
   ],
 })

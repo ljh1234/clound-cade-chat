@@ -13,6 +13,7 @@ const config_1 = require("@nestjs/config");
 const path_1 = require("path");
 const userModule_1 = require("./modules/user/userModule");
 const friendModule_1 = require("./modules/friend/friendModule");
+const authModule_1 = require("./modules/auth/authModule");
 const chetModule_1 = require("./modules/chat/chetModule");
 const groupModule_1 = require("./modules/group/groupModule");
 let AppModule = class AppModule {
@@ -38,6 +39,7 @@ AppModule = __decorate([
             userModule_1.UserModule,
             friendModule_1.FriendModule,
             chetModule_1.ChatModule,
+            authModule_1.AuthModule,
             groupModule_1.GroupModule
         ],
     })

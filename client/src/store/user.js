@@ -2,11 +2,12 @@ import { getLocalStorage, setLocalStorage } from '@/utils/index'
 
 const getDefaultUserState = () => {
   return {
-    userInfo: getLocalStorage('userInfo') ? JSON.parse(getLocalStorage('userInfo')) || {
-      nickName: '',
-      userId: '',
-      groupIds: '',
-      avatarUrl: '',
+    userInfo: getLocalStorage('userInfo') 
+    ? JSON.parse(getLocalStorage('userInfo')) : {
+        nickName: '',
+        userId: '',
+        groupIds: '',
+        avatarUrl: '',
     },
     token: getLocalStorage('token')
   }

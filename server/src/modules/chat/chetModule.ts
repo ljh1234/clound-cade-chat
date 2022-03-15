@@ -1,5 +1,3 @@
-
-   
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ChatService } from './chatService';
@@ -15,9 +13,4 @@ import { Repository } from 'typeorm';
   ],
   providers: [ChatService],
 })
-export class ChatModule {
-  constructor(
-    @InjectRepository(Group)
-    private readonly groupRepository: Repository<Group>,
-  ) {}
-}
+export class ChatModule {}

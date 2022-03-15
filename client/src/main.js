@@ -12,11 +12,15 @@ import {
   List,
   Avatar,
   Card,
-  Form
+  Form,
+  PageHeader,
+  Popover,
+  Select
 } from 'ant-design-vue'
 import 'ant-design-vue/dist/antd.css';
 import VueI18n from 'vue-i18n'
 import messages from '@/utils/i18n'
+import socket from '@/utils/websocket'
 import '@/style/index.less'
 
 Vue.use(Input)
@@ -28,11 +32,16 @@ Vue.use(List)
 Vue.use(Avatar)
 Vue.use(Card)
 Vue.use(Form)
+Vue.use(PageHeader)
+Vue.use(Popover)
+Vue.use(Select)
 Vue.use(VueI18n)
 
 Vue.prototype._deviceInfo = {
   isMobile: isMobile()
 }
+
+Vue.prototype.$ws = socket
 Vue.config.productionTip = false
 
 const locale = 'zhCN'

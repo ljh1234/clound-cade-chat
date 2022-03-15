@@ -28,6 +28,6 @@ export class User {
   @Column({ default: '' })
   salt: string
 
-  @Column()
+  @Column({ default: '' })
   groupIds: string
 }
