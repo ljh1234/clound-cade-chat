@@ -67,10 +67,13 @@ let ChatService = class ChatService {
         }
     }
     async joinGroup(client, data) {
+        console.log('joinGroup', data);
         const isUser = await this.userRepository.findOne({ userId: data.userId });
         if (isUser) {
-            const group = await this.groupRepository.findOne({ groupName: data.groupName });
+            const group = await this.groupRepository.findOne({ groupId: data.groupId });
             if (group) {
+                if (group.userIds.indexOf(`${data.userId}`) > -1)
+                    return;
                 const userIds = group.userIds ? `${group.userIds},${data.userId}` : `${data.userId}`;
                 const modifyedGroup = Object.assign(Object.assign({}, group), { userIds });
                 const newGroup = await this.groupRepository.save(modifyedGroup);

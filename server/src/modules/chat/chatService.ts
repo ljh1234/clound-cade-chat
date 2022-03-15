@@ -38,15 +38,6 @@ export class ChatService {
 
   // socket连接钩子
   async handleConnection(client: Socket): Promise<string> {
-    // const userRoom = client.handshake.query.userId
-    // 连接默认加入"阿童木聊天室"房间
-    // client.join(this.defaultGroup)
-    // 进来统计一下在线人数
-    // this.getActiveGroupUser()
-    // 用户独有消息房间 根据userId
-    // if(userRoom) {
-    //   client.join(userRoom)
-    // }
     console.log('链接成功')
     this.server.emit('connection', 'connected')
     return '连接成功'
@@ -98,12 +89,14 @@ export class ChatService {
   // 加入群组
   @SubscribeMessage('joinGroup')
   async joinGroup(@ConnectedSocket() client: Socket, @MessageBody() data: joinGroupBody):Promise<any> {
+    console.log('joinGroup', data);
     const isUser = await this.userRepository.findOne({userId: data.userId})
 
     if(isUser) {
-      const group = await this.groupRepository.findOne({ groupName: data.groupName })
+      const group = await this.groupRepository.findOne({ groupId: data.groupId })
 
       if (group) {
+        if (group.userIds.indexOf(`${data.userId}`) > -1) return
         const userIds = group.userIds ?  `${group.userIds},${data.userId}` : `${data.userId}`
         const modifyedGroup = {
           ...group,

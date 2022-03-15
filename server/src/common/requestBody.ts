@@ -18,7 +18,7 @@ export interface addGroupBody {
 
 export interface joinGroupBody {
   userId: number,
-  groupName: string
+  groupId: number
 }
 
 export interface registerBody {

@@ -1,6 +1,7 @@
 <template>
   <div>
     <a-select
+      v-model="selecedGroup"
       show-search
       :placeholder="$t('groupSelect.searchGroupPlaceholder')"
       option-filter-prop="children"
@@ -11,13 +12,14 @@
         {{ option.label }}
       </a-select-option>
     </a-select>
-    <a-button @click="handleJoinGroup">{{ $t('groupSelect.joinButtonText') }}</a-button>
+    <a-button type="primary" @click="handleJoinGroup">{{ $t('groupSelect.joinButtonText') }}</a-button>
   </div>
   
 </template>
 
 <script>
 import { getAllGroups } from '@/api/group'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'GroupSelect',
@@ -27,8 +29,12 @@ export default {
   mounted() {},
   data () {
     return {
-      options: []
+      options: [],
+      selecedGroup: ''
     }
+  },
+  computed: {
+    ...mapGetters(['userInfo'])
   },
   methods: {
     filterOption(input, option) {
@@ -47,7 +53,21 @@ export default {
         //
       }
     },
-    handleJoinGroup() {}
+    handleJoinGroup() {
+      if (!this.selectedGroup) return
+
+      try {
+        this.$ws.emit('joinGroup', {
+          userId: this.userInfo.userId,
+          groupId: this.selecedGroup
+        })
+      } catch (err) {
+        console.log(err)
+      }
+      
+
+      console.log('selecedGroup', this.selecedGroup)
+    }
   }
 }
 </script>
