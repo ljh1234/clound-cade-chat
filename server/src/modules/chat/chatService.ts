@@ -28,17 +28,14 @@ export class ChatService {
     @InjectRepository(GroupMessage)
     private readonly groupMessageRepository: Repository<GroupMessage>,
   ) {
+    
   }
 
-  @WebSocketServer()
-  server: Server
-
-  // 默认群
-  defaultGroup: string
+  @WebSocketServer() server;
 
   // socket连接钩子
   async handleConnection(client: Socket): Promise<string> {
-    console.log('链接成功')
+    console.log('client connection', client.id)
     this.server.emit('connection', 'connected')
     return '连接成功'
   }
@@ -48,13 +45,9 @@ export class ChatService {
     this.getActiveGroupUser()
   }
 
-  @SubscribeMessage('hello')
-  async hello(@ConnectedSocket() client: Socket, @MessageBody() data: any):Promise<any> {
-    console.log('data', data)
-  }
-  // 创建群组
+
   @SubscribeMessage('addGroup')
-  async addGroup(@ConnectedSocket() client: Socket, @MessageBody() data: addGroupBody):Promise<any> {
+  async addGroup(client: Socket, data: addGroupBody):Promise<any> {
     const isUser = await this.userRepository.findOne({ userId: data.creatorId })
     if(isUser) {
       const isHaveGroup = await this.groupRepository.findOne({ groupName: data.groupName })
@@ -89,34 +82,67 @@ export class ChatService {
   // 加入群组
   @SubscribeMessage('joinGroup')
   async joinGroup(@ConnectedSocket() client: Socket, @MessageBody() data: joinGroupBody):Promise<any> {
-    console.log('joinGroup', data);
-    const isUser = await this.userRepository.findOne({userId: data.userId})
+    console.log('joinGroup',typeof data);
 
-    if(isUser) {
-      const group = await this.groupRepository.findOne({ groupId: data.groupId })
+    try {
+      const isUser = await this.userRepository.findOne({userId: data.userId})
 
-      if (group) {
-        if (group.userIds.indexOf(`${data.userId}`) > -1) return
-        const userIds = group.userIds ?  `${group.userIds},${data.userId}` : `${data.userId}`
-        const modifyedGroup = {
-          ...group,
-          userIds
+      if(isUser) {
+        const group = await this.groupRepository.findOne({ groupId: data.groupId })
+
+        if (group) {
+          if (group.userIds.indexOf(`${data.userId}`) > -1) return
+          const userIds = group.userIds ?  `${group.userIds},${data.userId}` : `${data.userId}`
+          
+          const modifyedGroup = {
+            ...group,
+            userIds
+          }
+
+          console.log('modifyedGroup', modifyedGroup)
+          
+          const newGroup = await this.groupRepository.save(modifyedGroup)
+          client.join(group.groupId + '')
+          this.server.to(group.groupId + '').emit('joinGroup', resBody('OK', `${isUser.username}加入群${group.groupName}`, { group: newGroup } ))
+          this.getActiveGroupUser()
+        } else {
+          this.server.to(data.userId + '').emit('joinGroup', resBody('FAIL', '进群失败', null))
         }
-
-        const newGroup = await this.groupRepository.save(modifyedGroup)
-        this.server.to(group.groupId + '').emit('joinGroup', resBody('OK', `${isUser.username}加入群${group.groupName}`, { group: newGroup } ))
-        this.getActiveGroupUser()
       } else {
-        this.server.to(data.userId + '').emit('joinGroup', resBody('FAIL', '进群失败', null))
+        this.server.to(data.userId + '').emit('joinGroup', resBody('FAIL', '无权限', null))
       }
-    } else {
-      this.server.to(data.userId + '').emit('joinGroup', resBody('FAIL', '无权限', null))
+    } catch (error) {
+      
     }
+    // const isUser = await this.userRepository.findOne({userId: data.userId})
+
+    // if(isUser) {
+    //   const group = await this.groupRepository.findOne({ groupId: data.groupId })
+
+    //   if (group) {
+    //     if (group.userIds.indexOf(`${data.userId}`) > -1) return
+    //     const userIds = group.userIds ?  `${group.userIds},${data.userId}` : `${data.userId}`
+    //     const modifyedGroup = {
+    //       ...group,
+    //       userIds
+    //     }
+        
+    //     const newGroup = await this.groupRepository.save(modifyedGroup)
+    //     client.join(group.groupId + '')
+    //     this.server.to(group.groupId + '').emit('joinGroup', resBody('OK', `${isUser.username}加入群${group.groupName}`, { group: newGroup } ))
+    //     this.getActiveGroupUser()
+    //   } else {
+    //     this.server.to(data.userId + '').emit('joinGroup', resBody('FAIL', '进群失败', null))
+    //   }
+    // } else {
+    //   this.server.to(data.userId + '').emit('joinGroup', resBody('FAIL', '无权限', null))
+    // }
   }
 
   // 加入群组的socket连接
   @SubscribeMessage('joinGroupSocket')
   async joinGroupSocket(@ConnectedSocket() client: Socket, @MessageBody() data: GroupMap):Promise<any> {
+    console.log(client, data)
     const group = await this.groupRepository.findOne({ groupId: data.groupId })
     const user = await this.userRepository.findOne({ userId: data.userId })
 
@@ -186,9 +212,9 @@ export class ChatService {
       }
     }
 
-    this.server.to(this.defaultGroup).emit('activeGroupUser',{
-      msg: 'activeGroupUser', 
-      data: activeGroupUserGather
-    })
+    // this.server.to(this.defaultGroup).emit('activeGroupUser',{
+    //   msg: 'activeGroupUser', 
+    //   data: activeGroupUserGather
+    // })
   }
 }

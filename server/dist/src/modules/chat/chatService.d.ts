@@ -1,4 +1,4 @@
-import { Server, Socket } from 'socket.io';
+import { Socket } from 'socket.io';
 import { Repository } from 'typeorm';
 import { User } from 'src/entity/userEntity';
 import { Group, GroupMap } from 'src/entity/group';
@@ -10,11 +10,9 @@ export declare class ChatService {
     private readonly groupUserRepository;
     private readonly groupMessageRepository;
     constructor(userRepository: Repository<User>, groupRepository: Repository<Group>, groupUserRepository: Repository<GroupMap>, groupMessageRepository: Repository<GroupMessage>);
-    server: Server;
-    defaultGroup: string;
+    server: any;
     handleConnection(client: Socket): Promise<string>;
     handleDisconnect(): Promise<any>;
-    hello(client: Socket, data: any): Promise<any>;
     addGroup(client: Socket, data: addGroupBody): Promise<any>;
     joinGroup(client: Socket, data: joinGroupBody): Promise<any>;
     joinGroupSocket(client: Socket, data: GroupMap): Promise<any>;

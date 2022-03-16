@@ -31,15 +31,12 @@ let ChatService = class ChatService {
         this.groupMessageRepository = groupMessageRepository;
     }
     async handleConnection(client) {
-        console.log('链接成功');
+        console.log('client connection', client.id);
         this.server.emit('connection', 'connected');
         return '连接成功';
     }
     async handleDisconnect() {
         this.getActiveGroupUser();
-    }
-    async hello(client, data) {
-        console.log('data', data);
     }
     async addGroup(client, data) {
         const isUser = await this.userRepository.findOne({ userId: data.creatorId });
@@ -67,28 +64,35 @@ let ChatService = class ChatService {
         }
     }
     async joinGroup(client, data) {
-        console.log('joinGroup', data);
-        const isUser = await this.userRepository.findOne({ userId: data.userId });
-        if (isUser) {
-            const group = await this.groupRepository.findOne({ groupId: data.groupId });
-            if (group) {
-                if (group.userIds.indexOf(`${data.userId}`) > -1)
-                    return;
-                const userIds = group.userIds ? `${group.userIds},${data.userId}` : `${data.userId}`;
-                const modifyedGroup = Object.assign(Object.assign({}, group), { userIds });
-                const newGroup = await this.groupRepository.save(modifyedGroup);
-                this.server.to(group.groupId + '').emit('joinGroup', (0, utils_1.resBody)('OK', `${isUser.username}加入群${group.groupName}`, { group: newGroup }));
-                this.getActiveGroupUser();
+        console.log('joinGroup', typeof data);
+        try {
+            const isUser = await this.userRepository.findOne({ userId: data.userId });
+            if (isUser) {
+                const group = await this.groupRepository.findOne({ groupId: data.groupId });
+                if (group) {
+                    if (group.userIds.indexOf(`${data.userId}`) > -1)
+                        return;
+                    const userIds = group.userIds ? `${group.userIds},${data.userId}` : `${data.userId}`;
+                    const modifyedGroup = Object.assign(Object.assign({}, group), { userIds });
+                    console.log('modifyedGroup', modifyedGroup);
+                    const newGroup = await this.groupRepository.save(modifyedGroup);
+                    client.join(group.groupId + '');
+                    this.server.to(group.groupId + '').emit('joinGroup', (0, utils_1.resBody)('OK', `${isUser.username}加入群${group.groupName}`, { group: newGroup }));
+                    this.getActiveGroupUser();
+                }
+                else {
+                    this.server.to(data.userId + '').emit('joinGroup', (0, utils_1.resBody)('FAIL', '进群失败', null));
+                }
             }
             else {
-                this.server.to(data.userId + '').emit('joinGroup', (0, utils_1.resBody)('FAIL', '进群失败', null));
+                this.server.to(data.userId + '').emit('joinGroup', (0, utils_1.resBody)('FAIL', '无权限', null));
             }
         }
-        else {
-            this.server.to(data.userId + '').emit('joinGroup', (0, utils_1.resBody)('FAIL', '无权限', null));
+        catch (error) {
         }
     }
     async joinGroupSocket(client, data) {
+        console.log(client, data);
         const group = await this.groupRepository.findOne({ groupId: data.groupId });
         const user = await this.userRepository.findOne({ userId: data.userId });
         if (group && user) {
@@ -140,28 +144,14 @@ let ChatService = class ChatService {
                 });
             }
         }
-        this.server.to(this.defaultGroup).emit('activeGroupUser', {
-            msg: 'activeGroupUser',
-            data: activeGroupUserGather
-        });
     }
 };
 __decorate([
     (0, websockets_1.WebSocketServer)(),
-    __metadata("design:type", socket_io_1.Server)
+    __metadata("design:type", Object)
 ], ChatService.prototype, "server", void 0);
 __decorate([
-    (0, websockets_1.SubscribeMessage)('hello'),
-    __param(0, (0, websockets_1.ConnectedSocket)()),
-    __param(1, (0, websockets_1.MessageBody)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [socket_io_1.Socket, Object]),
-    __metadata("design:returntype", Promise)
-], ChatService.prototype, "hello", null);
-__decorate([
     (0, websockets_1.SubscribeMessage)('addGroup'),
-    __param(0, (0, websockets_1.ConnectedSocket)()),
-    __param(1, (0, websockets_1.MessageBody)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [socket_io_1.Socket, Object]),
     __metadata("design:returntype", Promise)

@@ -1,15 +1,20 @@
 import { getLocalStorage, setLocalStorage } from '@/utils/index'
+import { getUserInfo } from '@/api/user'
+
+const userInfo = {
+  nickName: '',
+  userId: '',
+  groupIds: '',
+  avatarUrl: ''
+}
 
 const getDefaultUserState = () => {
   return {
     userInfo: getLocalStorage('userInfo') ? 
-      JSON.parse(getLocalStorage('userInfo')) : {
-        nickName: '',
-        userId: '',
-        groupIds: '',
-        avatarUrl: ''
-      },
-    token: getLocalStorage('token')
+      JSON.parse(getLocalStorage('userInfo')) : JSON.parse(JSON.stringify(userInfo)),
+    token: getLocalStorage('token'),
+    chatList: getLocalStorage('chatList') ? 
+      JSON.parse(getLocalStorage('chatList')) : []
   }
 }
 
@@ -34,12 +39,32 @@ const mutations = {
 }
 
 const actions = {
-  storeUserInfo: ({ commit, dispatch }) => {
-    return new Promise(() => {
+  updateUserInfo: ({ commit }) => {
+    return new Promise((resolve, reject) => {
       // 用户接口 获取用户信息
-      console.log(commit, dispatch)
+      try {
+        const preUserInfo = getLocalStorage('userInfo') ? 
+        JSON.parse(getLocalStorage('userInfo')) : JSON.parse(JSON.stringify(userInfo))
+        
+        if (!preUserInfo.userId) {
+          reject()
+        }
+
+        getUserInfo(preUserInfo.userId).then((data) => {
+          commit('SET_USER', data)
+
+          resolve()
+        })
+      } catch (error) {
+        reject(error)
+      }
     })
-  }
+  },
+  // getChatList: ({ commit, dispatch }) => {
+  //   return new Promise(() => {
+
+  //   })
+  // }
 }
 
 export default {

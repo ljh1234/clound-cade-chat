@@ -1,7 +1,7 @@
 <template>
   <div>
     <a-select
-      v-model="selecedGroup"
+      v-model="selectedGroup"
       show-search
       :placeholder="$t('groupSelect.searchGroupPlaceholder')"
       option-filter-prop="children"
@@ -20,6 +20,7 @@
 <script>
 import { getAllGroups } from '@/api/group'
 import { mapGetters } from 'vuex'
+import socket from '@/utils/websocket'
 
 export default {
   name: 'GroupSelect',
@@ -30,7 +31,7 @@ export default {
   data () {
     return {
       options: [],
-      selecedGroup: ''
+      selectedGroup: ''
     }
   },
   computed: {
@@ -55,18 +56,16 @@ export default {
     },
     handleJoinGroup() {
       if (!this.selectedGroup) return
-
       try {
-        this.$ws.emit('joinGroup', {
+        socket.emit('joinGroup', {
           userId: this.userInfo.userId,
-          groupId: this.selecedGroup
+          groupId: this.selectedGroup
+        }, () => {
+          this.$store.dispatch('updateUserInfo')
         })
       } catch (err) {
         console.log(err)
       }
-      
-
-      console.log('selecedGroup', this.selecedGroup)
     }
   }
 }
