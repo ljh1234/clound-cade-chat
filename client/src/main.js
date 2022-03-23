@@ -15,7 +15,10 @@ import {
   Form,
   PageHeader,
   Popover,
-  Select
+  Select,
+  message,
+  Menu,
+  Icon
 } from 'ant-design-vue'
 import 'ant-design-vue/dist/antd.css';
 import VueI18n from 'vue-i18n'
@@ -35,6 +38,8 @@ Vue.use(Form)
 Vue.use(PageHeader)
 Vue.use(Popover)
 Vue.use(Select)
+Vue.use(Menu)
+Vue.use(Icon)
 Vue.use(VueI18n)
 
 Vue.prototype._deviceInfo = {
@@ -42,6 +47,7 @@ Vue.prototype._deviceInfo = {
 }
 
 Vue.prototype.$ws = socket
+Vue.prototype.$message = message
 Vue.config.productionTip = false
 
 const locale = 'zhCN'

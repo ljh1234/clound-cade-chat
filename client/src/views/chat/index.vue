@@ -8,11 +8,15 @@
           <a-button size="small" type="primary" shape="circle" icon="plus" />
         </a-popover>
         
-        <chat-list />
+        <chat-list :list="chatList" @click="handleChatListClick" />
       </a-card>
     </div>
     <div class="chat-page-right" >
-      <chat-panel />
+      <template v-for="chat in chatList">
+        <keep-alive :key="chat.groupId">
+          <chat-panel v-if="chat.groupId === showId"  :id="chat.groupId" :title="chat.groupName" />
+        </keep-alive>
+      </template>
     </div>
   </div>
   
@@ -45,7 +49,12 @@ export default {
       visible: {
         groupSearchVisible: false
       },
-      searchGroupName: ''
+      loading: {
+        getChatList: false
+      },
+      searchGroupName: '',
+      showId: '',
+      chatType: ''
     }
   },
   methods: {
@@ -55,12 +64,25 @@ export default {
       }
 
       try {
+        this.loading.getChatList = true
         const list = await getGroups(this.groupIds)
 
-        console.log('groupList', list)
+        this.chatList = list.groupInfos
+      
+        if (this.chatList.length > 0) {
+          const defaultChatId = this.chatList[0].groupId
+          this.setDefaultChatId(defaultChatId, 'group')
+        }
       } catch (error) {
         //
       }
+    },
+    setDefaultChatId(id, type) {
+      this.showId = id
+      this.chatType = type
+    },
+    handleChatListClick(id) {
+      this.showId = id
     }
   }
 }
@@ -71,6 +93,9 @@ export default {
   display: flex;
   .chat-page-left {
     width: 25vw;
+    /deep/ .ant-card-body {
+      padding: 10px 0;
+    }
   }
   .chat-page-right {
     width: 75vw;

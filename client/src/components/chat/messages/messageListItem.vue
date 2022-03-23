@@ -1,12 +1,14 @@
 <template>
   <div :class="['chat-list-item', isRight ? 'float-right' : '']">
+    <a-icon v-if="!message.isSend" type="loading" />
+    <a-icon v-if="message.isSend === ''" style="color: red" type="exclamation-circle" theme="filled" />
     <div>
       <div class="chat-list-item-head">
         <a-avatar size="large" src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
         <div class="nick-name">nickName</div>
       </div>
       <span class="chat-list-item-message">
-        jkljkljkl
+        {{ message.content }}
       </span>
     </div>
   </div>
@@ -26,13 +28,7 @@ export default {
       type: Boolean,
       default: false
     }
-  },
-  data () {
-    return {
-      
-    }
-  },
-  methods: {}
+  }
 }
 </script>
 

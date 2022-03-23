@@ -31,7 +31,8 @@ let ChatService = class ChatService {
         this.groupMessageRepository = groupMessageRepository;
     }
     async handleConnection(client) {
-        console.log('client connection', client.id);
+        const userRoom = client.handshake.query.userId;
+        client.join(userRoom);
         this.server.emit('connection', 'connected');
         return '连接成功';
     }
@@ -105,10 +106,12 @@ let ChatService = class ChatService {
         }
     }
     async sendGroupMessage(data) {
+        console.log('data', data);
         const isUser = await this.userRepository.findOne({ userId: data.userId });
+        const userCached = {};
         if (isUser) {
-            const userGroupMap = await this.groupUserRepository.findOne({ userId: data.userId, groupId: data.groupId });
-            if (!userGroupMap || !data.groupId) {
+            !userCached[data.userId] && (userCached[data.userId] = isUser);
+            if (!data.groupId) {
                 this.server.to(data.userId + '').emit('groupMessage', (0, utils_1.resBody)('FAIL', '消息发送错误', null));
                 return;
             }
@@ -120,7 +123,7 @@ let ChatService = class ChatService {
             }
             data.time = new Date().valueOf();
             await this.groupMessageRepository.save(data);
-            this.server.to(data.groupId + '').emit('groupMessage', (0, utils_1.resBody)('OK', '', { data }));
+            this.server.to(data.groupId).emit('groupMessage', (0, utils_1.resBody)('OK', '', { messageData: data, userInfo: userCached[data.userId] }));
         }
         else {
             this.server.to(data.userId + '').emit('groupMessage', (0, utils_1.resBody)('FAIL', '无权限', null));
@@ -169,7 +172,7 @@ __decorate([
     __param(0, (0, websockets_1.ConnectedSocket)()),
     __param(1, (0, websockets_1.MessageBody)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [socket_io_1.Socket, group_1.GroupMap]),
+    __metadata("design:paramtypes", [socket_io_1.Socket, Object]),
     __metadata("design:returntype", Promise)
 ], ChatService.prototype, "joinGroupSocket", null);
 __decorate([

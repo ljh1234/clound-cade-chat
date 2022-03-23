@@ -1,5 +1,5 @@
 <template>
-  <a-input-search v-model="msg" size="large" @search="handleSend">
+  <a-input-search v-model="msg" size="large" @pressEnter="handleSend" @search="handleSend">
     <a-button type="primary" slot="enterButton">
       {{ $t('sendButtonText') }}
     </a-button>
@@ -12,15 +12,21 @@ export default {
   mounted() {},
   data () {
     return {
-      msg: ''
+      msg: '',
+      sendLoading: false
     }
   },
   methods: {
     handleSend() {
-      this.$emit('send', this.mgs)
+      if (!this.msg) this.$message.warnning(`${this.$t('cannotSendEmptyMessage')}`)
+      this.sendLoading = true
+      this.$emit('send', this.msg)
     },
     clearMsg() {
       this.msg = ''
+    },
+    disLoading() {
+      this.sendLoading = false
     }
   }
 }

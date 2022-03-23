@@ -1,10 +1,9 @@
 export const messageModel = {
   userId: '',
-  aimId: '',
-  nickName: '',
-  message: {
-    type: '',
-    value: ''
-  },
+  groupId: '',
+  messageType: '',
+  content: '',
+  width: '',
+  height: '',
   time: ''
 }

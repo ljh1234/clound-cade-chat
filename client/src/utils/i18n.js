@@ -1,6 +1,7 @@
 const message = {
   zhCN: {
     sendButtonText: '发送',
+    cannotSendEmptyMessage: '不能发送空消息',
     login: {
       usernameLabel: '用户名',
       usernamePlaceholder: '请输入用户名',
@@ -16,6 +17,7 @@ const message = {
   },
   EN: {
     sendButtonText: 'send',
+    cannotSendEmptyMessage: 'can not send empty message',
     login: {
       usernameLabel: 'username',
       usernamePlaceholder: 'please enter your username',

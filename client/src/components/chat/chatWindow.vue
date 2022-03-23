@@ -1,6 +1,6 @@
 <template>
   <div class="chat-window">
-    <message-list />
+    <message-list :messages="_messages" />
   </div>
 </template>
 
@@ -16,6 +16,11 @@ export default {
     messages: {
       type: Array,
       default: () => []
+    }
+  },
+  computed: {
+    _messages() {
+      return this.messages
     }
   },
   data () {

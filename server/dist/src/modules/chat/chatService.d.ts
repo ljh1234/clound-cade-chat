@@ -3,7 +3,7 @@ import { Repository } from 'typeorm';
 import { User } from 'src/entity/userEntity';
 import { Group, GroupMap } from 'src/entity/group';
 import { GroupMessage } from 'src/entity/groupMessage';
-import { addGroupBody, joinGroupBody } from 'src/common/requestBody';
+import { addGroupBody } from 'src/common/requestBody';
 export declare class ChatService {
     private readonly userRepository;
     private readonly groupRepository;
@@ -14,8 +14,8 @@ export declare class ChatService {
     handleConnection(client: Socket): Promise<string>;
     handleDisconnect(): Promise<any>;
     addGroup(client: Socket, data: addGroupBody): Promise<any>;
-    joinGroup(client: Socket, data: joinGroupBody): Promise<any>;
-    joinGroupSocket(client: Socket, data: GroupMap): Promise<any>;
-    sendGroupMessage(data: GroupMessageDto): Promise<any>;
+    joinGroup(client: Socket, data: any): Promise<any>;
+    joinGroupSocket(client: Socket, data: any): Promise<any>;
+    sendGroupMessage(data: any): Promise<any>;
     getActiveGroupUser(): Promise<void>;
 }

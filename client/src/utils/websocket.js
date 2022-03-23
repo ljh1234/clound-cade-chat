@@ -1,13 +1,17 @@
 import { io } from "socket.io-client"
 import store from '@/store/index'
 
-const socket = io(`ws://${location.host}`, { query: { userId: store.getters.userInfo.userId }})
+export default function connectWebSocket() {
+  const socket = io.connect(`ws://${location.host}/?userId=${store.getters.userInfo.userId}`, { reconnection: true })
 
-socket.onAny((eventName, ...args) => {
-  // ...
-  console.log(eventName, ...args)
-})
+  socket.on('connection', () => {
+    console.log('connected')
+  })
 
-socket.connect()
+  socket.on('groupMessage', (data) => {
+    console.log(data)
+  })
 
-export default socket
+
+  return socket
+}

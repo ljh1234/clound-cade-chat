@@ -15,6 +15,7 @@ import { createWriteStream } from 'fs'
 import { join } from 'path'
 import { resBody } from '../utils'
 import { addGroupBody, joinGroupBody } from 'src/common/requestBody'
+import { AnyRecord } from 'dns'
 
 @WebSocketGateway()
 export class ChatService {
@@ -35,7 +36,9 @@ export class ChatService {
 
   // socket连接钩子
   async handleConnection(client: Socket): Promise<string> {
-    console.log('client connection', client.id)
+    const userRoom = client.handshake.query.userId;
+
+    client.join(userRoom)
     this.server.emit('connection', 'connected')
     return '连接成功'
   }
@@ -81,7 +84,7 @@ export class ChatService {
 
   // 加入群组
   @SubscribeMessage('joinGroup')
-  async joinGroup(@ConnectedSocket() client: Socket, @MessageBody() data: joinGroupBody):Promise<any> {
+  async joinGroup(@ConnectedSocket() client: Socket, @MessageBody() data: any):Promise<any> {
     console.log('joinGroup',typeof data);
 
     try {
@@ -141,7 +144,7 @@ export class ChatService {
 
   // 加入群组的socket连接
   @SubscribeMessage('joinGroupSocket')
-  async joinGroupSocket(@ConnectedSocket() client: Socket, @MessageBody() data: GroupMap):Promise<any> {
+  async joinGroupSocket(@ConnectedSocket() client: Socket, @MessageBody() data: any):Promise<any> {
     console.log(client, data)
     const group = await this.groupRepository.findOne({ groupId: data.groupId })
     const user = await this.userRepository.findOne({ userId: data.userId })
@@ -159,13 +162,15 @@ export class ChatService {
 
   // 发送群消息
   @SubscribeMessage('groupMessage')
-  async sendGroupMessage(@MessageBody() data: GroupMessageDto):Promise<any> {
+  async sendGroupMessage(@MessageBody() data: any):Promise<any> {
+    console.log('data', data);
     const isUser = await this.userRepository.findOne({ userId: data.userId })
 
-    if(isUser) {
-      const userGroupMap = await this.groupUserRepository.findOne({userId: data.userId, groupId: data.groupId})
+    const userCached = {}
 
-      if(!userGroupMap || !data.groupId) {
+    if(isUser) {
+      !userCached[data.userId] && (userCached[data.userId] = isUser)
+      if(!data.groupId) {
         this.server.to(data.userId + '').emit('groupMessage', resBody('FAIL', '消息发送错误', null))
         return
       } 
@@ -179,7 +184,8 @@ export class ChatService {
       data.time = new Date().valueOf() // 使用服务端时间
 
       await this.groupMessageRepository.save(data)
-      this.server.to(data.groupId + '').emit('groupMessage', resBody('OK', '', { data }))
+    
+      this.server.to(data.groupId).emit('groupMessage', resBody('OK', '', { messageData: data, userInfo: userCached[data.userId] }))
     } else {
       this.server.to(data.userId + '').emit('groupMessage', resBody('FAIL', '无权限', null))
     }
