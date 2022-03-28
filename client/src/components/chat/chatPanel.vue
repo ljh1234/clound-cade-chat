@@ -55,7 +55,6 @@ export default {
   },
   methods: {
     handleSendMessage(message) {
-      console.log('meg', message)
       if (!message || !this.id) return
 
       if (this.type === 'group') {

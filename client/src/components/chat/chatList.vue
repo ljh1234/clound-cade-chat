@@ -25,7 +25,6 @@ export default {
     ...mapGetters(['userId'])
   },
   mounted() {
-    this.joinGroupSocket()
   },
   data () {
     return {
@@ -33,13 +32,7 @@ export default {
     }
   },
   methods: {
-    joinGroupSocket() {
-      this.list.length && this.list.forEach((item) => {
-        this.$ws.emit('joinGroupSocket', { userId: this.userId, groupId: item.groupId })
-      })
-    },
     handleClick({ key }) {
-      console.log('key', key)
       this.$emit('click', key)
     }
   }

@@ -145,18 +145,18 @@ export class ChatService {
   // 加入群组的socket连接
   @SubscribeMessage('joinGroupSocket')
   async joinGroupSocket(@ConnectedSocket() client: Socket, @MessageBody() data: any):Promise<any> {
-    console.log(client, data)
+    console.log('joinGroupSocket', data)
     const group = await this.groupRepository.findOne({ groupId: data.groupId })
     const user = await this.userRepository.findOne({ userId: data.userId })
 
     if(group && user) {
-      client.join(group.groupId + '')
+      client.join(`${group.groupId}`)
       const res = { group: group, user: user}
 
-      this.server.to(group.groupId + '').emit('joinGroupSocket', 
+      this.server.to(`${group.groupId}`).emit('joinGroupSocket', 
       resBody('OK', `${user.username}加入群${group.groupName}`, { data: res }))
     } else {
-      this.server.to(data.userId + '').emit('joinGroupSocket', resBody('FAIL', '进群失败', null))
+      this.server.to(`${data.userId}`).emit('joinGroupSocket', resBody('FAIL', '进群失败', null))
     }
   }
 
@@ -171,7 +171,7 @@ export class ChatService {
     if(isUser) {
       !userCached[data.userId] && (userCached[data.userId] = isUser)
       if(!data.groupId) {
-        this.server.to(data.userId + '').emit('groupMessage', resBody('FAIL', '消息发送错误', null))
+        this.server.to(`${data.userId}`).emit('groupMessage', resBody('FAIL', '消息发送错误', null))
         return
       } 
       if(data.messageType === 'image') {
@@ -185,9 +185,9 @@ export class ChatService {
 
       await this.groupMessageRepository.save(data)
     
-      this.server.to(data.groupId).emit('groupMessage', resBody('OK', '', { messageData: data, userInfo: userCached[data.userId] }))
+      this.server.to(`${data.groupId}`).emit('groupMessage', resBody('OK', '', { messageData: data, userInfo: userCached[data.userId] }))
     } else {
-      this.server.to(data.userId + '').emit('groupMessage', resBody('FAIL', '无权限', null))
+      this.server.to(`${data.userId}`).emit('groupMessage', resBody('FAIL', '无权限', null))
     }
   }
 

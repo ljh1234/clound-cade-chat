@@ -46,7 +46,7 @@ Vue.prototype._deviceInfo = {
   isMobile: isMobile()
 }
 
-Vue.prototype.$ws = socket
+Vue.prototype.$ws = socket()
 Vue.prototype.$message = message
 Vue.config.productionTip = false
 
